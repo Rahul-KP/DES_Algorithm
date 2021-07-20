@@ -1,2 +1,3 @@
-DES_Algorithm
+# DES_Algorithm
 
+Python code to illustrate encryption and decryption of plaintext using the DES algorithm...
