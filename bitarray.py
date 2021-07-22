@@ -8,12 +8,7 @@ class bitarray:
                   while len(i) < 8:
                         i = '0' + i #i will be '00101010'
                   self.bits.extend(list(i))
+            self.bits = [int(i) for i in self.bits]
 
       def get_bytes(self):
-            for i in self.bits:
-                  print(i, end=' ')
-            print()
-
-string1 = 'rahul'
-byte1 = bitarray(string1)
-byte1.get_bytes()
+            return self.bits
