@@ -36,6 +36,11 @@ def round_of_16(key_56):
 	return keys
 
 #Input data
+string_data64 = '0000 0001 0010 0011 0100 0101 0110 0111 1000 1001 1010 1011 1100 1101 1110 1111'
+string_data64 = string_data64.split()
+string_data64 = list(''.join(string_data64))
+data64 = [int(i) for i in string_data64]
+
 # key_64 = bitarray('rahul').get_bytes()
 string_64 = '0001001100110100010101110111100110011011101111001101111111110001' #key as 64 binary bits
 key_64 = list(string_64)
@@ -71,3 +76,6 @@ for i in range(len(keys)):
     keys[i] = permutation(keys[i], pc2)
 
 print(keys)
+
+#IP
+ip = [58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8, 57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7]
