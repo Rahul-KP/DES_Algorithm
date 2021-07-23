@@ -1,5 +1,10 @@
 from bitarray import *
 
+#function to perform permutations
+def permutation(inp_list, perm_list):
+    new_list = [inp_list[perm_list[i]-1] for i in range(len(perm_list))]
+    return new_list
+
 # function to split a given list into two halves
 def split_half(tmp_list):
 	tmp_list = [tmp_list[i:i+len(tmp_list)//2] for i in range(0,len(tmp_list),len(tmp_list)//2)]
@@ -47,11 +52,22 @@ pc1 = [57,49,41,33,25,17,9,1,58,50,42,34,26,18,10,2,59,51,43,35,27,19,11,3,60,52
 
 #Applying PC-1
 # key_56 = [] #aka permuted key ,k+
-key_56 = [key_64[pc1[i]-1] for i in range(56)]
+
+key_56 = permutation(key_64, pc1)
 
 key_56 = split_half(key_56)
 #print(key_56)
 #key_56 is same as k0 =c0+d0
 
 keys = round_of_16(key_56) #16 subkeys are obtained
+print(keys)
+
+tmp_k = keys.copy()
+
+#PC2
+pc2 = [14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2, 41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32]
+#calling function to perform PC2 permutation
+for i in range(len(keys)):
+    keys[i] = permutation(keys[i], pc2)
+
 print(keys)
