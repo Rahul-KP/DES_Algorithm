@@ -13,7 +13,7 @@ def dec_to_bin(inp):
     binlist = []
     while inp > 0:
         binlist.append(inp % 2)
-        inp /= 2
+        inp = inp // 2
     binlist.reverse()
     return binlist
 #function to perform permutations
