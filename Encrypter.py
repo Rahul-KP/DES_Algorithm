@@ -1,6 +1,5 @@
 from bitarray import *
 
-#S-boxes
 def bin_to_dec(inp):
     c = len(inp) - 1
     d = 0
@@ -16,6 +15,7 @@ def dec_to_bin(inp):
         inp = inp // 2
     binlist.reverse()
     return binlist
+
 #function to perform permutations
 def permutation(inp_list, perm_list): #prem_list - permuted list
     new_list = [inp_list[perm_list[i]-1] for i in range(len(perm_list))]
@@ -104,6 +104,7 @@ def XOR_lists(e_r,k):
 	XORed = [e_r[i] ^ k[i] for i in range(len(k))]
 	return XORed
 
+#S-boxes
 def s_boxes(s_inp):
     S1 = [[14,4,13,1,2,15,11,8,3,10,6,12,5,9,0,7],[0,15,7,4,14,2,13,1,10,6,12,11,9,5,3,8],[4,1,14,8,13,6,2,11,15,12,9,7,3,10,5,0],[15,12,8,2,4,9,1,7,5,11,3,14,10,0,6,13]]
     S2 = [[15,1,8,4,6,11,3,4,9,7,2,13,12,0,5,10],[3,13,4,7,15,2,8,14,12,0,1,10,6,9,11,5],[0,14,7,11,10,4,13,1,5,8,12,6,9,3,2,15],[13,8,10,1,3,15,4,2,11,6,7,12,0,5,14,9]]
@@ -115,8 +116,8 @@ def s_boxes(s_inp):
     S8 = [[13,2,8,4,6,15,11,1,10,9,3,14,5,0,12,7],[1,15,13,8,10,3,7,4,12,5,6,11,0,14,9,2],[7,11,4,1,9,12,14,2,0,6,10,13,15,3,5,8],[2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11]]
 
     S = [S1] + [S2] + [S3] + [S4] + [S5] + [S6] + [S7] + [S8]
-    B = [s_inp[i:i+6] for i in range(0, len(s_inp), 6)]
-    s_out = []
+    B = [s_inp[i:i+6] for i in range(0, len(s_inp), 6)] #011000 010001 011110 111010 100001 100110 010100 100111
+    s_out = []# 32 bits
     for k in B:
         i = bin_to_dec([k[0], k[-1]])
         j = bin_to_dec(k[1:-1])
@@ -130,15 +131,22 @@ def cipher_16(IP):
     P = [16,7,20,21,29,12,28,17,1,15,23,26,5,18,31,10,2,8,24,14,32,27,3,9,19,13,30,6,22,11,4,25]
     for i in range(16):
         Ln = R #Rn-1 = R
-        s_input = XOR_lists((permutation(R,E_bit_table)),keys[i]) #48 bit input to S boxes
+        s_input = XOR_lists((permutation(R,E_bit_table)),keys[i]) #48 bit input to S boxes ,aka Kn + E(Rn-1)
         s_output = s_boxes(s_input) # 32 bit output from S boxes, have to undergo permutation P
         s_output = permutation(s_output, P)
         Rn = XOR_lists(L, s_output)
         R = Rn
         L = Ln
-    return [L,R]
+    return R,L
 
-L16, R16 = cipher_16(IP_bits)
+R16,L16 = cipher_16(IP_bits)
+reverse = R16 + L16
+
+#IP inverse table
+IP_inv = [40,8,48,16,56,24,64,32,39,7,47,15,55,23,63,31,38,6,46,14,54,22,62,30,37,5,45,13,53,21,61,29,36,4,44,12,52,20,60,28,35,3,43,11,51,19,59,27,34,2,42,10,50,18,58,26,33,1,41,9,49,17,57,25]
+
+cipher_text = permutation(reverse,IP_inv)
+print([cipher_text[i:i+8] for i in range(0,len(cipher_text),8)])
 
 pass
 pass
