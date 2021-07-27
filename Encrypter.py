@@ -148,7 +148,9 @@ cipher_text = permutation(reverse,IP_inv)
 
 #convert cipher text 64 bits binary to hexadecimal cipher text
 cipher_text = hex(bin_to_dec(cipher_text))
-print(cipher_text[2:])
+plain_text = hex(bin_to_dec(M))
+key_text = hex(bin_to_dec(K))
+print('Plain text(hex): ' + plain_text[2:] + '\nKey(hex): ' + key_text[2:] + '\nCipher text(hex): ' + cipher_text[2:])
 
 pass
 pass
