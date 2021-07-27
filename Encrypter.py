@@ -1,24 +1,17 @@
 from bitarray import *
 
-def bin_to_dec(inp):
-    c = len(inp) - 1
-    d = 0
-    for i in inp:
-        d += 2**c * i
-        c -= 1
-    return d
-
 def dec_to_bin(inp, size):
-    binlist = []
-    while inp > 0:
-        binlist.append(inp % 2)
-        inp = inp // 2
-    binlist.reverse()
+    binstr = bin(inp)
+    binlist = list(binstr[2:])
+    binlist = [int(x) for x in binlist]
+    i = 0
     while len(binlist) < size:
-        i = 0
         binlist.insert(i,0)
         i += 1
     return binlist
+
+def bin_to_dec(inp):
+    return int(''.join([str(x) for x in inp]), 2)
 
 #function to perform permutations
 def permutation(inp_list, perm_list): #prem_list - permuted list
@@ -143,6 +136,7 @@ def cipher_16(IP):
         L = Ln
     return R,L
 
+#[R16[i:i+4] for i in range(0, len(R16), 4)]
 R16,L16 = cipher_16(IP_bits)
 reverse = R16 + L16
 
@@ -150,7 +144,11 @@ reverse = R16 + L16
 IP_inv = [40,8,48,16,56,24,64,32,39,7,47,15,55,23,63,31,38,6,46,14,54,22,62,30,37,5,45,13,53,21,61,29,36,4,44,12,52,20,60,28,35,3,43,11,51,19,59,27,34,2,42,10,50,18,58,26,33,1,41,9,49,17,57,25]
 
 cipher_text = permutation(reverse,IP_inv)
-print([cipher_text[i:i+8] for i in range(0,len(cipher_text),8)])
+#print([cipher_text[i:i+8] for i in range(0,len(cipher_text),8)])
+
+#convert cipher text 64 bits binary to hexadecimal cipher text
+cipher_text = hex(bin_to_dec(cipher_text))
+print(cipher_text[2:])
 
 pass
 pass
