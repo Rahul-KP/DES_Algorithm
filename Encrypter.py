@@ -51,15 +51,15 @@ string_data64 = string_data64.split()
 string_data64 = list(''.join(string_data64))
 M = [int(i) for i in string_data64]
 
-# key_64 = bitarray('rahul').get_bytes()
+# K = bitarray('rahul').get_bytes()
 string_64 = '0001001100110100010101110111100110011011101111001101111111110001' #key as 64 binary bits
-key_64 = list(string_64)
-key_64 = [int(i) for i in key_64] #converting the string of 64-bit key to a list of 64 bits of datatype 'int'
+K = list(string_64)
+K = [int(i) for i in K] #converting the string of 64-bit key to a list of 64 bits of datatype 'int'
 
 #Zero padding
-while(len(key_64) < 64):
+while(len(K) < 64):
 	i = 0
-	key_64.insert(i,0)
+	K.insert(i,0)
 	i += 1
 
 #PC-1
@@ -109,6 +109,3 @@ def cipher_16(IP):
 def f(e_r,k):
 	XORed = [e_r ^ k for i in range(len(k))]
 	return XORed
-	
-
-
