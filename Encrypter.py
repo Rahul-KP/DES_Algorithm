@@ -8,12 +8,16 @@ def bin_to_dec(inp):
         c -= 1
     return d
 
-def dec_to_bin(inp):
+def dec_to_bin(inp, size):
     binlist = []
     while inp > 0:
         binlist.append(inp % 2)
         inp = inp // 2
     binlist.reverse()
+    while len(binlist) < size:
+        i = 0
+        binlist.insert(i,0)
+        i += 1
     return binlist
 
 #function to perform permutations
@@ -121,7 +125,7 @@ def s_boxes(s_inp):
     for k in B:
         i = bin_to_dec([k[0], k[-1]])
         j = bin_to_dec(k[1:-1])
-        s_out.extend(dec_to_bin(S[B.index(k)][i][j]))
+        s_out.extend(dec_to_bin(S[B.index(k)][i][j], 4))
     return s_out
 
 #cipher_16 - A function to iterate through the split IP and hence find f(cipher before inverse permutation)
