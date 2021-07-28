@@ -1,6 +1,11 @@
 class bitarray:
       def __init__(self, hex_in):
-            self.bits = [int(x) for x in bin(int(hex_in, 16))[2:]]
+            if isinstance(hex_in,list):
+                  self.bits = hex_in
+            elif isinstance(hex_in,str):
+                  self.bits = [int(x) for x in bin(int(hex_in, 16))[2:]]
+            else:
+                  self.bits = list()
 
       def zero_padding(self):
             while(len(self) < 64):
@@ -8,13 +13,7 @@ class bitarray:
                   self.bits.insert(i,0)
 
       def permute(self, perm_list):
-            self.bits = [self[perm_list[i]-1] for i in range(len(perm_list))]
-
-      def split_half(self):
-            self.bits = [self[i:i+len(self)//2] for i in range(0,len(self),len(self)//2)]
-
-      def group_by(self, no_of_bits):
-            self.bits = [self[i:i+6] for i in range(0, len(self), 6)]
+            self.bits = [self[perm_list[i]-1] for i in range(len(perm_list))] 
 
       def lcs(self):
             self.bits.append(self[0])
@@ -30,10 +29,18 @@ class bitarray:
             self.bits[index] = value
 
       def __add__(self, other):
-            return self.bits + other.bits
+            return bitarray(self.bits + other.bits)
 
       def __len__(self):
             return len(self.bits)
+
+      @staticmethod
+      def split_half(obj):
+           return [obj[i:i+len(obj)//2] for i in range(0,len(obj),len(obj)//2)]
+
+      @staticmethod
+      def group_by(bitarry_obj,no_of_bits):
+            return [bitarry_obj[i:i+no_of_bits] for i in range(0, len(bitarry_obj), no_of_bits)]
 
       @staticmethod
       def dec_to_bin(inp, size):
