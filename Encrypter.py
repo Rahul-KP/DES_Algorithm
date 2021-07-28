@@ -59,9 +59,9 @@ def round_of_16(key_plus):
 #K = list(string_64)
 #K = [int(i) for i in K] #converting the string of 64-bit key to a list of 64 bits of datatype 'int'
 
-K = "AABB09182736CCDD"
+K = input('Enter key in hex: ')
 K = [int(x) for x in bin(int(K, 16))[2:]]
-M = "123456ABCD132536"
+M = input('Enter plaintext in hex: ')
 M = [int(x) for x in bin(int(M, 16))[2:]]
 #Zero padding
 while(len(K) < 64):
@@ -133,17 +133,15 @@ def cipher_16(IP):
     L = IP[0]
     R = IP[1]
     P = [16,7,20,21,29,12,28,17,1,15,23,26,5,18,31,10,2,8,24,14,32,27,3,9,19,13,30,6,22,11,4,25]
-    print(hex(bin_to_dec(L))[2:],hex(bin_to_dec(R))[2:])
+    #print(hex(bin_to_dec(L))[2:],hex(bin_to_dec(R))[2:])
     for i in range(16):
         Ln = R #Rn-1 = R
         tmp = permutation(R,E_bit_table) #tmp is E(R0)
         s_input = XOR_lists(tmp,keys[i]) #48 bit input to S boxes ,aka Kn + E(Rn-1)
         s_output = s_boxes(s_input) # 32 bit output from S boxes, have to undergo permutation P
-        if i == 0:
-            s_output = dec_to_bin(int('8afe657e', 16), 4)
         s_output = permutation(s_output, P)
         Rn = XOR_lists(L, s_output)
-        print(hex(bin_to_dec(Ln))[2:],hex(bin_to_dec(Rn))[2:],hex(bin_to_dec(keys[i]))[2:])
+        #print(hex(bin_to_dec(Ln))[2:],hex(bin_to_dec(Rn))[2:],hex(bin_to_dec(keys[i]))[2:])
         R = Rn
         L = Ln
     return R,L
