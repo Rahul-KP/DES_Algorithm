@@ -66,18 +66,17 @@ M = input('Enter plaintext in hex: ')
 M = [int(x) for x in bin(int(M, 16))[2:]]
 
 #K - Key
-K = input('Enter key in hex: ')
+K = input('Enter key in hex : ')
 K = [int(x) for x in bin(int(K, 16))[2:]]
 
-#Zero padding
-while(len(K) < 64):
-	i = 0
-	K.insert(i,0)
-	i += 1
-while(len(M) < 64):
-	i = 0
-	M.insert(i,0)
-	i += 1
+def zero_padding(ls):
+    while(len(ls) < 64):
+        i = 0
+        ls.insert(i,0)
+    return ls
+
+M = zero_padding(M)
+K = zero_padding(K)
 
 #Applying PC-1
 #key_plus = [] #aka permuted key ,k+
