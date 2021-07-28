@@ -11,6 +11,9 @@ ip_table = [58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54
 #E-bit Selection table , where E stands for Expansion
 E_bit_table = [32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17, 16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1]
 
+#IP inverse table
+IP_inv = [40,8,48,16,56,24,64,32,39,7,47,15,55,23,63,31,38,6,46,14,54,22,62,30,37,5,45,13,53,21,61,29,36,4,44,12,52,20,60,28,35,3,43,11,51,19,59,27,34,2,42,10,50,18,58,26,33,1,41,9,49,17,57,25]
+
 def dec_to_bin(inp, size):
     binstr = bin(inp)
     binlist = list(binstr[2:])
@@ -29,17 +32,18 @@ def permutation(inp_list, perm_list): #prem_list - permuted list
     new_list = [inp_list[perm_list[i]-1] for i in range(len(perm_list))]
     return new_list
 
-# function to split a given list into two halves
+#function to split a given list into two halves
 def split_half(tmp_list):
 	tmp_list = [tmp_list[i:i+len(tmp_list)//2] for i in range(0,len(tmp_list),len(tmp_list)//2)]
 	return tmp_list
 
-# Left Circular shift function
+#Left Circular shift function
 def lcs(tmp_list):
 	tmp_list.append(tmp_list[0])
 	tmp_list.remove(tmp_list[0])
 	return tmp_list
 
+#round_of_16() - to create 16 keys
 def round_of_16(key_plus):
 
 	keys = [] #16 keys of 56bits each
@@ -141,9 +145,6 @@ def cipher_16(IP):
 #[R16[i:i+4] for i in range(0, len(R16), 4)]
 R16,L16 = cipher_16(IP_bits)
 reverse = R16 + L16
-
-#IP inverse table
-IP_inv = [40,8,48,16,56,24,64,32,39,7,47,15,55,23,63,31,38,6,46,14,54,22,62,30,37,5,45,13,53,21,61,29,36,4,44,12,52,20,60,28,35,3,43,11,51,19,59,27,34,2,42,10,50,18,58,26,33,1,41,9,49,17,57,25]
 
 cipher_text = permutation(reverse,IP_inv)
 #print([cipher_text[i:i+8] for i in range(0,len(cipher_text),8)])
