@@ -28,13 +28,13 @@ def cipher_16(IP):
     #print(hex(bin_to_dec(L))[2:],hex(bin_to_dec(R))[2:])
     for i in range(16):
         Ln = R #Rn-1 = R
-        R.permutation(E_bit_table)
-        R.XOR_lists(keys_16[i]) #48 bit input to S boxes ,aka Kn + E(Rn-1)
+        R.permute(E_bit_table)
+        R.XOR(keys_16[i]) #48 bit input to S boxes ,aka Kn + E(Rn-1)
         s_output = s_boxes(R) # 32 bit output from S boxes, have to undergo permutation P
-        s_output = permutation(s_output, P)
-        Rn = XOR_lists(L, s_output)
+        s_output.permute(P)
+        L.XOR(s_output)
         #print(hex(bin_to_dec(Ln))[2:],hex(bin_to_dec(Rn))[2:],hex(bin_to_dec(keys[i]))[2:])
-        R = Rn
+        R = L
         L = Ln
     return R,L
 
@@ -49,12 +49,12 @@ def s_boxes(s_inp):
     S7 =  [[4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1], [13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6], [1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2], [6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12]]
     S8 =  [[13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7], [1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2], [7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8], [2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11]]
     S = [S1] + [S2] + [S3] + [S4] + [S5] + [S6] + [S7] + [S8]
-    B = [s_inp[i:i+6] for i in range(0, len(s_inp), 6)] #011000 010001 011110 111010 100001 100110 010100 100111
-    s_out = []# 32 bits
+    B = bitarray.group_by(s_inp,6)#011000 010001 011110 111010 100001 100110 010100 100111
+    s_out = bitarray()# 32 bits
     for k in range(len(B)):
-        i = bin_to_dec([B[k][0], B[k][-1]])
-        j = bin_to_dec(B[k][1:-1])
-        s_out.extend(dec_to_bin(S[k][i][j], 4))
+        i = s_out.bin_to_dec([B[k][0], B[k][-1]])
+        j = s_out.bin_to_dec(B[k][1:-1])
+        s_out.extend(bitarray.dec_to_bin(S[k][i][j], 4))
     return s_out
 
 #Resources
@@ -83,8 +83,17 @@ key.permute(pc1)
 key = bitarray.split_half(key)
 keys_16 = round_of_16(key)
 
-for i in key_16:
+for i in keys_16:
 	i.permute(pc2)
 
 plain_text.permute(ip_table)
 IP_bits = bitarray.split_half(plain_text)
+
+R16,L16 = cipher_16(IP_bits)
+reverse = R16 + L16
+
+reverse.permute(IP_inv)
+cipher_text = hex(bitarray.bin_to_dec(reverse.bits))
+plain_text = hex(bitarray.bin_to_dec(plain_text.bits))
+key_text = hex(bitarray.bin_to_dec(key[0]+key[1]))
+print('Plain text(hex): ' + plain_text[2:] + '\nKey(hex): ' + key_text[2:] + '\nCipher text(hex): ' + cipher_text[2:])

@@ -1,5 +1,5 @@
 class bitarray:
-      def __init__(self, hex_in):
+      def __init__(self, hex_in = list()):
             if isinstance(hex_in,list):
                   self.bits = hex_in
             elif isinstance(hex_in,str):
@@ -22,6 +22,9 @@ class bitarray:
       def XOR(self, obj):
             self.bits = [self[i] ^ obj[i] for i in range(len(obj))]
 
+      def extend(self,inp_ls):
+            self.bits = self.bits + inp_ls
+
       def __getitem__(self, index):
             return self.bits[index]
 
@@ -36,11 +39,11 @@ class bitarray:
 
       @staticmethod
       def split_half(obj):
-           return [obj[i:i+len(obj)//2] for i in range(0,len(obj),len(obj)//2)]
+           return [bitarray(obj[i:i+len(obj)//2]) for i in range(0,len(obj),len(obj)//2)]
 
       @staticmethod
       def group_by(bitarry_obj,no_of_bits):
-            return [bitarry_obj[i:i+no_of_bits] for i in range(0, len(bitarry_obj), no_of_bits)]
+            return [bitarray(bitarry_obj[i:i+no_of_bits]) for i in range(0, len(bitarry_obj), no_of_bits)]
 
       @staticmethod
       def dec_to_bin(inp, size):
@@ -56,3 +59,4 @@ class bitarray:
       @staticmethod
       def bin_to_dec(inp):
             return int(''.join([str(x) for x in inp]), 2)
+
