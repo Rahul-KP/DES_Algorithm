@@ -25,6 +25,9 @@ class bitarray:
       def extend(self,inp_ls):
             self.bits = self.bits + inp_ls
 
+      def copy(self):
+            return bitarray(self.bits.copy())
+
       def __getitem__(self, index):
             return self.bits[index]
 
