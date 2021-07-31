@@ -27,7 +27,7 @@ def cipher_16(IP):
     P = [16,7,20,21,29,12,28,17,1,15,23,26,5,18,31,10,2,8,24,14,32,27,3,9,19,13,30,6,22,11,4,25]
     #print(hex(bin_to_dec(L))[2:],hex(bin_to_dec(R))[2:])
     for i in range(16):
-        Ln = R #Rn-1 = R
+        Ln = R.copy() #Rn-1 = R
         R.permute(E_bit_table)
         R.XOR(keys_16[i]) #48 bit input to S boxes ,aka Kn + E(Rn-1)
         s_output = s_boxes(R) # 32 bit output from S boxes, have to undergo permutation P
@@ -79,6 +79,9 @@ key = bitarray(input('Enter key in hex : '))
 plain_text.zero_padding()
 key.zero_padding()
 
+plain_text_org = plain_text.copy()
+key_org = key.copy()
+
 key.permute(pc1)
 key = bitarray.split_half(key)
 keys_16 = round_of_16(key)
@@ -93,7 +96,8 @@ R16,L16 = cipher_16(IP_bits)
 reverse = R16 + L16
 
 reverse.permute(IP_inv)
+
 cipher_text = hex(bitarray.bin_to_dec(reverse.bits))
-plain_text = hex(bitarray.bin_to_dec(plain_text.bits))
-key_text = hex(bitarray.bin_to_dec(key[0]+key[1]))
+plain_text = hex(bitarray.bin_to_dec(plain_text_org.bits))
+key_text = hex(bitarray.bin_to_dec(key_org.bits))
 print('Plain text(hex): ' + plain_text[2:] + '\nKey(hex): ' + key_text[2:] + '\nCipher text(hex): ' + cipher_text[2:])
