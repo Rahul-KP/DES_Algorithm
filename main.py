@@ -85,6 +85,7 @@ key_org = key.copy()
 key.permute(pc1)
 key = bitarray.split_half(key)
 keys_16 = round_of_16(key)
+keys_16.reverse()
 
 for i in keys_16:
 	i.permute(pc2)
