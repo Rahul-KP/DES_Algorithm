@@ -1,19 +1,15 @@
 class bitarray:
-      def __init__(self, hex_in = list()):
-            if isinstance(hex_in,list):
-                  self.bits = hex_in
-            elif isinstance(hex_in,str):
-                  self.bits = [int(x) for x in bin(int(hex_in, 16))[2:]]
-            else:
-                  self.bits = list()
+      def __init__(self, inp):
+            tmp = inp[2:]
+            tmp = list(tmp)
 
-      def zero_padding(self):
-            while(len(self) < 64):
+      def zero_padding(self): #zero padding to the left
+            while(len(self) < 8): # to accept 8-bit block for input function
                   i = 0
                   self.bits.insert(i,0)
 
       def permute(self, perm_list):
-            self.bits = [self[perm_list[i]-1] for i in range(len(perm_list))] 
+            self.bits = [self[perm_list[i]-1] for i in range(len(perm_list))]
 
       def lcs(self):
             self.bits.append(self[0])
