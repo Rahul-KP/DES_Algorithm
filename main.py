@@ -21,7 +21,7 @@ def round_of_16(key_plus):
 	return keys
 
 #cipher_16 - A function to iterate through the split IP and hence find f(cipher before inverse permutation)
-def cipher_16(IP):
+def cipher_16(IP, E_bit_table, keys_16):
     L = IP[0]
     R = IP[1]
     P = [16,7,20,21,29,12,28,17,1,15,23,26,5,18,31,10,2,8,24,14,32,27,3,9,19,13,30,6,22,11,4,25]
@@ -32,7 +32,7 @@ def cipher_16(IP):
         R.XOR(keys_16[i]) #48 bit input to S boxes ,aka Kn + E(Rn-1)
         s_output = s_boxes(R) # 32 bit output from S boxes, have to undergo permutation P
         s_output.permute(P)
-        L.XOR(s_output)
+        L.XOR(s_output) #L contains the result of the final operation in the respective iteration
         #print(hex(bin_to_dec(Ln))[2:],hex(bin_to_dec(Rn))[2:],hex(bin_to_dec(keys[i]))[2:])
         R = L
         L = Ln
@@ -73,31 +73,41 @@ E_bit_table = [32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13
 #IP inverse table
 IP_inv = [40,8,48,16,56,24,64,32,39,7,47,15,55,23,63,31,38,6,46,14,54,22,62,30,37,5,45,13,53,21,61,29,36,4,44,12,52,20,60,28,35,3,43,11,51,19,59,27,34,2,42,10,50,18,58,26,33,1,41,9,49,17,57,25]
 
-plain_text = bitarray(input('Enter plaintext in hex: '))
-key = bitarray(input('Enter key in hex : '))
 
-plain_text.zero_padding()
-key.zero_padding()
+def crypt(flag):
+    global pc1, pc2, ip_table, E_bit_table, IP_inv
+    plain_text = bitarray(input('Enter plaintext in hex: '))
+    key = bitarray(input('Enter key in hex : '))
 
-plain_text_org = plain_text.copy()
-key_org = key.copy()
+    plain_text.zero_padding()
+    key.zero_padding()
 
-key.permute(pc1)
-key = bitarray.split_half(key)
-keys_16 = round_of_16(key)
+    plain_text_org = plain_text.copy()
+    key_org = key.copy()
 
-for i in keys_16:
-	i.permute(pc2)
+    key.permute(pc1)
+    key = bitarray.split_half(key)
+    keys_16 = round_of_16(key)
 
-plain_text.permute(ip_table)
-IP_bits = bitarray.split_half(plain_text)
+    if flag:
+        keys_16.reverse()
 
-R16,L16 = cipher_16(IP_bits)
-reverse = R16 + L16
+    for i in keys_16:
+        i.permute(pc2)
 
-reverse.permute(IP_inv)
+    plain_text.permute(ip_table)
+    IP_bits = bitarray.split_half(plain_text)
 
-cipher_text = hex(bitarray.bin_to_dec(reverse.bits))
-plain_text = hex(bitarray.bin_to_dec(plain_text_org.bits))
-key_text = hex(bitarray.bin_to_dec(key_org.bits))
-print('Plain text(hex): ' + plain_text[2:] + '\nKey(hex): ' + key_text[2:] + '\nCipher text(hex): ' + cipher_text[2:])
+    R16,L16 = cipher_16(IP_bits, E_bit_table, keys_16)
+    reverse = R16 + L16
+
+    reverse.permute(IP_inv)
+
+    cipher_text = hex(bitarray.bin_to_dec(reverse.bits))
+    plain_text = hex(bitarray.bin_to_dec(plain_text_org.bits))
+    key_text = hex(bitarray.bin_to_dec(key_org.bits))
+    print('Plain text(hex): ' + plain_text[2:] + '\nKey(hex): ' + key_text[2:] + '\nCipher text(hex): ' + cipher_text[2:])
+
+if __name__ == '__main__':
+    flag = input('1. Encrypt\n2. Decrypt\n> ')
+    crypt(flag)
