@@ -89,11 +89,11 @@ def crypt(flag):
     key = bitarray.split_half(key)
     keys_16 = round_of_16(key)
 
-    if flag:
-        keys_16.reverse()
-
     for i in keys_16:
         i.permute(pc2)
+
+    if flag:
+        keys_16.reverse()
 
     plain_text.permute(ip_table)
     IP_bits = bitarray.split_half(plain_text)
@@ -109,5 +109,5 @@ def crypt(flag):
     print('Plain text(hex): ' + plain_text[2:] + '\nKey(hex): ' + key_text[2:] + '\nCipher text(hex): ' + cipher_text[2:])
 
 if __name__ == '__main__':
-    flag = input('1. Encrypt\n2. Decrypt\n> ')
-    crypt(flag)
+    flag = input('0. Encrypt\n1. Decrypt\n> ')
+    crypt(int(flag))
