@@ -1,7 +1,6 @@
 from bitarray import *
 
 def conv_input(text):
-    
     text = [[int(i) for i in bin(x)[2:]] for x in text.encode('utf-8')]
 
     #zero-padding
@@ -102,8 +101,8 @@ def compute_key(key):
 
     return keys_16
 
-def crypt(plain_text,keys_16,flag):
-    global pc1, pc2, ip_table, E_bit_table, IP_inv
+def crypt(plain_text,keys,flag):
+    keys_16 = keys.copy()
 
     if flag:
         keys_16.reverse()
@@ -122,17 +121,21 @@ def main():
     pt = conv_input(input('enter text to be encrypted\n'))
     plain = pt.copy()
     k = conv_input(input('enter key for encryption\n'))[0]
-    k = compute_key(k)
+    k16 = compute_key(k)
+    print('Output')
     ct = []
     #encryption - hence flag is 0
     for i in pt:
-        tmp = crypt(i,k,0)
+        tmp = crypt(i,k16,0)
         ct.append(tmp)
-        print(hex(bitarray.bin_to_dec(tmp.bits)),end='')
-    print()
+        #print(hex(bitarray.bin_to_dec(tmp.bits))[2:],end='')
+    #print()
+    tmp_list = []
     #decryption
     for i in ct:
-        print(hex(bitarray.bin_to_dec(crypt(i,k,1).bits)),end='')
+        tmp = crypt(i, k16, 1)
+        tmp_list.append(tmp)
+    print(tmp_list == plain)
 
 if __name__ == '__main__':
     main()
