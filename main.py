@@ -132,7 +132,8 @@ def main():
     for i in cipher_text:
         plain_text_d.append(crypt(i, keys_16, 1))
 
-    print(plain_text_c == plain_text_d)
+    for j in range(len(plain_text_c)):
+        print(plain_text_c[j].bits == plain_text_d[j].bits)
 
 if __name__ == '__main__':
     main()
