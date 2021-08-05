@@ -118,24 +118,21 @@ def crypt(plain_text,keys,flag):
     return reverse
 
 def main():
-    pt = conv_input(input('enter text to be encrypted\n'))
-    plain = pt.copy()
-    k = conv_input(input('enter key for encryption\n'))[0]
-    k16 = compute_key(k)
-    print('Output')
-    ct = []
-    #encryption - hence flag is 0
-    for i in pt:
-        tmp = crypt(i,k16,0)
-        ct.append(tmp)
-        #print(hex(bitarray.bin_to_dec(tmp.bits))[2:],end='')
-    #print()
-    tmp_list = []
-    #decryption
-    for i in ct:
-        tmp = crypt(i, k16, 1)
-        tmp_list.append(tmp)
-    print(tmp_list == plain)
+    plain_text = conv_input('lush green lawn')
+    key = conv_input('rahul')[0]
+
+    plain_text_c = plain_text.copy()
+    keys_16 = compute_key(key)
+
+    cipher_text = []
+    for i in plain_text:
+        cipher_text.append(crypt(i, keys_16, 0))
+
+    plain_text_d = []
+    for i in cipher_text:
+        plain_text_d.append(crypt(i, keys_16, 1))
+
+    print(plain_text_c == plain_text_d)
 
 if __name__ == '__main__':
     main()
