@@ -1,4 +1,5 @@
 from bitarray import *
+import pickle
 
 def conv_input(text):
     text = [[int(i) for i in bin(x)[2:]] for x in text.encode('utf-8')]
@@ -117,23 +118,33 @@ def crypt(plain_text,keys,flag):
 
     return reverse
 
-def main():
-    plain_text = conv_input('lush green lawn')
-    key = conv_input('rahul')[0]
+def pkl_to_text(file_):
+    with open(file_, 'rb') as i:
+        text = pickle.load(i)
+    text = [i.bits for i in text]
+    text = [j for i in text for j in i]
+    text = [text[i:i+8] for i in range(0, len(text), 8)]
+    text = ''.join([chr(bitarray.bin_to_dec(i)) for i in text])
+    print(text)
 
-    plain_text_c = plain_text.copy()
-    keys_16 = compute_key(key)
+def init(_text, key_, flag1, flag2, out_):
+    if flag1:
+        with open(_text, 'rb') as inp:
+            plain_text = pickle.load(inp)
+    else:
+        plain_text = conv_input(_text)
+
+    with open(key_, 'rb') as k:
+        key = pickle.load(k)
+    key = bitarray(key)
+    keys_16 = compute_key(key.copy())
 
     cipher_text = []
     for i in plain_text:
-        cipher_text.append(crypt(i, keys_16, 0))
+        cipher_text.append(crypt(i, keys_16, flag2))
 
-    plain_text_d = []
-    for i in cipher_text:
-        plain_text_d.append(crypt(i, keys_16, 1))
-
-    for j in range(len(plain_text_c)):
-        print(plain_text_c[j].bits == plain_text_d[j].bits)
+    with open(out_, 'wb') as outp:
+        pickle.dump(cipher_text, outp, pickle.HIGHEST_PROTOCOL)
 
 if __name__ == '__main__':
-    main()
+    pass
