@@ -1,9 +1,23 @@
 from bitarray import *
 
-def conv_input():
-    text = input('Enter text to be encrypted/decrypted: ')
+def conv_input(text):
     
-    while len(text)
+    text = [[int(i) for i in bin(x)[2:]] for x in text.encode('utf-8')]
+
+    #zero-padding
+    for i in text:
+        while len(i) < 8:
+            i.insert(0,0)
+
+    #null padding
+    text = [ i for sublist in text for i in sublist]
+    text = bitarray(text)
+    text = text.group_by(text,64)
+    i = text[-1]
+    while(len(i) < 64):
+        i.bits.append(0)
+
+    return text
 
 #round_of_16() - to create 16 keys
 def round_of_16(key_plus):
@@ -78,23 +92,18 @@ E_bit_table = [32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13
 #IP inverse table
 IP_inv = [40,8,48,16,56,24,64,32,39,7,47,15,55,23,63,31,38,6,46,14,54,22,62,30,37,5,45,13,53,21,61,29,36,4,44,12,52,20,60,28,35,3,43,11,51,19,59,27,34,2,42,10,50,18,58,26,33,1,41,9,49,17,57,25]
 
-def crypt(flag):
-    global pc1, pc2, ip_table, E_bit_table, IP_inv
-    plain_text = bitarray(input('Enter plaintext in hex: '))
-    key = bitarray(input('Enter key in hex : '))
-
-    #plain_text.zero_padding()
-    #key.zero_padding()
-
-    plain_text_org = plain_text.copy()
-    key_org = key.copy()
-
+def compute_key(key):
     key.permute(pc1)
     key = bitarray.split_half(key)
     keys_16 = round_of_16(key)
 
     for i in keys_16:
         i.permute(pc2)
+
+    return keys_16
+
+def crypt(plain_text,keys_16,flag):
+    global pc1, pc2, ip_table, E_bit_table, IP_inv
 
     if flag:
         keys_16.reverse()
@@ -107,11 +116,23 @@ def crypt(flag):
 
     reverse.permute(IP_inv)
 
-    cipher_text = hex(bitarray.bin_to_dec(reverse.bits))
-    plain_text = hex(bitarray.bin_to_dec(plain_text_org.bits))
-    key_text = hex(bitarray.bin_to_dec(key_org.bits))
-    print('Plain text(hex): ' + plain_text[2:] + '\nKey(hex): ' + key_text[2:] + '\nCipher text(hex): ' + cipher_text[2:])
+    return reverse
+
+def main():
+    pt = conv_input(input('enter text to be encrypted\n'))
+    plain = pt.copy()
+    k = conv_input(input('enter key for encryption\n'))[0]
+    k = compute_key(k)
+    ct = []
+    #encryption - hence flag is 0
+    for i in pt:
+        tmp = crypt(i,k,0)
+        ct.append(tmp)
+        print(hex(bitarray.bin_to_dec(tmp.bits)),end='')
+    print()
+    #decryption
+    for i in ct:
+        print(hex(bitarray.bin_to_dec(crypt(i,k,1).bits)),end='')
 
 if __name__ == '__main__':
-    flag = input('0. Encrypt\n1. Decrypt\n> ')
-    crypt(int(flag))
+    main()

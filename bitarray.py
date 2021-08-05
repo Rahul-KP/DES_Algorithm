@@ -1,12 +1,6 @@
 class bitarray:
-      def __init__(self, inp):
-            tmp = inp[2:]
-            tmp = list(tmp)
-
-      def zero_padding(self): #zero padding to the left
-            while(len(self) < 8): # to accept 8-bit block for input function
-                  i = 0
-                  self.bits.insert(i,0)
+      def __init__(self, inp = list()):
+            self.bits = inp
 
       def permute(self, perm_list):
             self.bits = [self[perm_list[i]-1] for i in range(len(perm_list))]
